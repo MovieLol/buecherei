@@ -25,7 +25,8 @@ namespace Buecherei
         public MainWindow()
         {
             InitializeComponent();
-            
+            //ich hurensohn <-- Nico
+
         }
     }
 }
