@@ -20,6 +20,7 @@ namespace DBAccess
         private string sDBPass;
         private string sDBName;
         private MySqlConnection dbconnect;
+        private static DBConnection dbcInstance;
 
         #endregion 
 
@@ -69,6 +70,62 @@ namespace DBAccess
         {
             dbconnect.Close();
         }
-        #endregion 
+        #endregion
+
+        #region Database Methods
+
+        protected T GetObject<T>()
+        {
+            return (T)Activator.CreateInstance(typeof(T));
+        }
+
+        public List<T> ReadDB<T>(string sSQL)
+        {
+            try
+            {
+                //Verbindung öffnen
+                OpenDBConnection();
+
+                //Ausführen des SQL-Statements
+                MySqlCommand msCommand = new MySqlCommand(sSQL);
+                msCommand.Connection = dbconnect;
+
+                //Ergebnis in eine Liste Speichern
+                //Liste hat den Typ T
+                //T ist der Typ des Zielobjekts
+                //Zielobjekte sind Objekte der Klassen der DB-Tabellen
+                //Ermöglicht eine universelle Methode, welche Datenbankabfragen durchführen kann und zwar für verschiedene Typen
+                //Typen müssen Objekte der Klassen sein
+                //Gewünschte DB-Spalten müssen in den Klassen eine Property des selben Namens haben!!
+                //Rückgabe ist eine Liste von Objekten der gesuchten Klasse
+                MySqlDataReader msDataReader = msCommand.ExecuteReader();
+                List<T> lst = new List<T>();
+                while (msDataReader.Read())     //Solange im SQL Ergebnis etwas drin steht
+                {
+                    T temp = GetObject<T>();
+                    for (int t = 0; t < msDataReader.FieldCount; t++)   //Für jede "Spalte" die aus der Datenbank geholt wird
+                    {
+                        typeof(T).GetProperty(msDataReader.GetName(t)).SetValue(temp, msDataReader.GetValue(t));  //Speichere Spaltenwert in ein Objekt  
+                    }
+                    lst.Add(temp);  //Füge Wert einer Liste von Objekten hinzu               
+                }
+                return lst; //Zurückgeben der Liste mit Objekten
+            }
+            catch (Exception e)
+            {
+                //Abfangen der Fehlermeldung
+                //MessageBox.Show("Fehler bei der Datenbankabfrage!\n\n" + e.ToString(), "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                return null;
+
+            }
+            finally
+            {
+                //Verbindung schliessen
+                CloseDBConnection();
+            }
+
+        }
+
+        #endregion
     }
 }
