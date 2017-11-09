@@ -40,9 +40,9 @@ namespace DBAccess
 
         #endregion
 
-        #region Create Database Connection
+        #region Database Connection
 
-        public MySqlConnection CreateConnectionString()
+        public void OpenDBConnection()
         {
             MySqlConnectionStringBuilder con_string = new MySqlConnectionStringBuilder()
             {
@@ -53,7 +53,21 @@ namespace DBAccess
                 Database = sDBName
             };
             dbconnect = new MySqlConnection(con_string.ToString());
-            return dbconnect;
+
+            try
+            {
+                dbconnect.Open();
+            }
+            catch (MySqlException)
+            {
+
+                throw;
+            }
+        }
+
+        public void CloseDBConnection()
+        {
+            dbconnect.Close();
         }
         #endregion 
     }
