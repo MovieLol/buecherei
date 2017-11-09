@@ -18,6 +18,8 @@ namespace DBTables
 
         }
 
+        #region Properties
+        
         public int cust_id { get => _iCustID; set => _iCustID = value; }
         public int addr_id { get => _iAddrID; set => _iAddrID = value; }
         public string forename { get => _sForename; set => _sForename = value; }
@@ -25,5 +27,7 @@ namespace DBTables
         public string mailaddress { get => _sMailaddress; set => _sMailaddress = value; }
         public string password { get => _sPassword; set => _sPassword = value; }
         public DateTime birthday { get => _dtBirthday; set => _dtBirthday = value; }
+
+        #endregion
     }
 }
