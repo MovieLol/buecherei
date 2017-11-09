@@ -1,15 +1,16 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MySql.Data.MySqlClient;
-//TODO: delete unnecessary using directives 
+//TODO delete unnecessary using directives 
 
-namespace Buecherei.classes
+namespace DBAccess
 {
-    class ServerManager
+    public class DBConnection
     {
         #region Class-Attributes
 
@@ -24,12 +25,12 @@ namespace Buecherei.classes
 
         #region Konstruktor
 
-        public ServerManager()
+        public DBConnection()
         {
             StreamReader reader = new StreamReader("C:" + Environment.ExpandEnvironmentVariables("%HOMEPATH%") + "\\.connectionDB.cfg");
             string connect = reader.ReadLine();
             string[] allDataForDB = connect.Split(';');
-            this.sDBIP   = allDataForDB[0];
+            this.sDBIP = allDataForDB[0];
             this.iDBPort = Convert.ToInt32(allDataForDB[1]);
             this.sDBUser = allDataForDB[2];
             this.sDBPass = allDataForDB[3];

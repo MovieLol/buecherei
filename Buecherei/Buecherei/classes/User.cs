@@ -7,6 +7,6 @@ using System.Threading.Tasks;
 namespace Buecherei.classes
 {
     class User
-    {
+    { 
     }
 }
